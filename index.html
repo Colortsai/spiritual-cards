@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>靈性指引卡</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .deck-container {
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .positive-deck {
+            background: linear-gradient(135deg, #5a7df5, #f0c8e6);
+            color: white;
+        }
+        .negative-deck {
+            background: linear-gradient(135deg, #858578, #e8e1e1);
+            color: white;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            padding: 0 10px;
+        }
+        .card-display {
+            aspect-ratio: 1/1.7;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        .card-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .draw-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .positive-button {
+            background-color: #ffaf78;
+            color: white;
+        }
+        .positive-button:hover {
+            background-color: #f0c8e6;
+        }
+        .negative-button {
+            background-color: #d5fd00;
+            color: #858578;
+        }
+        .negative-button:hover {
+            background-color: #e8e1e1;
+        }
+        h1 {
+            color: #5a7df5;
+            margin-bottom: 30px;
+        }
+        .deck-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .initial-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-style: italic;
+            color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 90%;
+        }
+        @media (max-width: 1000px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .deck-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>✨ 靈性指引卡 ✨</h1>
+    
+    <div class="container">
+        <div class="deck-container negative-deck">
+            <div class="deck-title">人生功課</div>
+            <div class="cards-grid" id="negativeGrid">
+                <div class="card-display">
+                    <span class="initial-message">準備深入內在...</span>
+                </div>
+                <div class="card-display">
+                    <span class="initial-message">準備深入內在...</span>
+                </div>
+                <div class="card-display">
+                    <span class="initial-message">準備深入內在...</span>
+                </div>
+                <div class="card-display">
+                    <span class="initial-message">準備深入內在...</span>
+                </div>
+            </div>
+            <button class="draw-button negative-button" onclick="drawCards('negative')">抽取四張功課卡</button>
+        </div>
+
+        <div class="deck-container positive-deck">
+            <div class="deck-title">宇宙給你的指引</div>
+            <div class="cards-grid" id="positiveGrid">
+                <div class="card-display">
+                    <span class="initial-message">準備接收宇宙訊息...</span>
+                </div>
+                <div class="card-display">
+                    <span class="initial-message">準備接收宇宙訊息...</span>
+                </div>
+                <div class="card-display">
+                    <span class="initial-message">準備接收宇宙訊息...</span>
+                </div>
+                <div class="card-display">
+                    <span class="initial-message">準備接收宇宙訊息...</span>
+                </div>
+            </div>
+            <button class="draw-button positive-button" onclick="drawCards('positive')">抽取四張指引卡</button>
+        </div>
+    </div>
+
+    <script>
+        const cardNames = {
+            negative: [
+                "恐懼", "報復", "罪惡感", "批判", "期望",
+                "信念", "隱藏的自我", "死亡的誘惑", "需求", "心碎",
+                "犧牲", "獨立", "執著", "控制", "權力鬥爭",
+                "角色", "祖先問題", "個人神話", "沙門的考驗", "前世",
+                "黑暗的故事", "無價值感", "心魔", "無意義感"
+            ],
+            positive: [
+                "選擇", "寬恕", "放下", "信任", "溝通",
+                "真理", "結合", "領袖力", "自由", "靈感",
+                "順流", "真愛", "性能量", "天賦禮物", "成功",
+                "豐盛", "天真無邪", "愛", "和平", "願景",
+                "喜悅", "神的孩子", "高層心靈", "神性"
+            ]
+        };
+
+        function padNumber(number) {
+            return number.toString().padStart(2, '0');
+        }
+
+        function getImagePath(index, isPositive) {
+            const imageNumber = isPositive ? index + 25 : index + 1;
+            return `images/${padNumber(imageNumber)}.jpeg`;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function drawCards(type) {
+            const grid = document.getElementById(type + 'Grid');
+            const cardElements = grid.getElementsByClassName('card-display');
+            const isPositive = type === 'positive';
+            const cards = cardNames[type];
+            
+            // 洗牌並抽取前4張
+            const selectedCards = shuffleArray([...Array(cards.length).keys()]);
+            const selectedIndices = selectedCards.slice(0, 4);
+            
+            // 為每張卡片添加動畫效果
+            Array.from(cardElements).forEach((cardElement, index) => {
+                cardElement.style.opacity = '0';
+                cardElement.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    const cardIndex = selectedIndices[index];
+                    const imagePath = getImagePath(cardIndex, isPositive);
+                    const cardName = cards[cardIndex];
+                    
+                    cardElement.innerHTML = `<img src="${imagePath}" alt="${cardName}">`;
+                    cardElement.style.opacity = '1';
+                    cardElement.style.transform = 'scale(1)';
+                }, 300 + (index * 150));
+            });
+        }
+    </script>
+</body>
+</html>
