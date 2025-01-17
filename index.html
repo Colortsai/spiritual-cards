@@ -180,7 +180,12 @@
 
         function getImagePath(index, isPositive) {
             const imageNumber = isPositive ? index + 25 : index + 1;
-            return `images/${padNumber(imageNumber)}.jpeg`;
+            return `images/${padNumber(imageNumber)}.jpg`;
+        }
+
+        function handleImageError(img, number) {
+            console.error(`圖片載入失敗: ${img.src}`);
+            img.parentElement.innerHTML = `<span class="initial-message">圖片 ${number} 載入失敗</span>`;
         }
 
         function shuffleArray(array) {
@@ -211,7 +216,8 @@
                     const imagePath = getImagePath(cardIndex, isPositive);
                     const cardName = cards[cardIndex];
                     
-                    cardElement.innerHTML = `<img src="${imagePath}" alt="${cardName}">`;
+                    // 添加圖片載入錯誤處理
+                    cardElement.innerHTML = `<img src="${imagePath}" alt="${cardName}" onerror="handleImageError(this, '${cardIndex + 1}')">`;
                     cardElement.style.opacity = '1';
                     cardElement.style.transform = 'scale(1)';
                 }, 300 + (index * 150));
